@@ -1,0 +1,45 @@
+#!/bin/bash
+
+python src/train.py \
+    headless=True \
+    env_info=True \
+    num_envs=2048 \
+    num_objects=1 \
+    num_objects_per_env=1 \
+    graphics_device_id=0 \
+    split='train' \
+    cluster=0 \
+    task=XArmAllegroHandTableTop \
+    train=XArmAllegroHandTableTopPPO \
+    task.env.enableContactSensors=False \
+    reward_type="target+bonus+success+reach+energy_reach+contact_coverage" \
+    task.env.objectMode=urdf \
+    task.env.placeSide=center \
+    task.env.wallLeft=False \
+    task.env.wallRight=False \
+    task.env.wallBack=False \
+    task.env.tableNoCollision=False \
+    task.env.objectUrdfPath=oakink/teapot_0/decomposed.urdf \
+    +task.env.use_center_collision=True \
+    +task.env.maskBackfacePoints=True \
+    +task.env.maskPalmInwardPoints=True \
+    +task.env.useForceDirectionBins=False \
+    +task.env.useNormalInClustering=True \
+    +task.env.useObjectMask=True \
+    ++task.env.numObjectPointCloudPoints=512 \
+    ++task.env.useBackWall=False \
+    task.env.wrenchProb=0 \
+    +task.env.stateFeatureDim=192 \
+    +task.env.stateType=hash \
+    +task.env.numKeyStates=32 \
+    +task.env.stateIncludeGoal=True \
+    +task.env.stateRunningMaxMode=global \
+    sim_device=cuda:0 \
+    rl_device=cuda:0 \
+    physics_engine=physx \
+    --cfg_train=XArmAllegroHandTableTopPPO \
+    --seed=42 \
+    --exp_name='PPO' \
+    --logdir='allegro_table_top' \
+    --run_device_id=0 \
+    --web_visualizer_port=-1

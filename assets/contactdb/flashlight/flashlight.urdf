@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot name="object">
+  <link name="object">
+    <visual>
+      <origin xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="flashlight.stl" scale="1.00 1.00 1.00"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="flashlight.stl" scale="1.00 1.00 1.00"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>
+    
+                    

@@ -1,0 +1,14 @@
+hydra-core
+opencv-python
+matplotlib
+wandb
+ipdb
+tqdm
+numpy==1.23.0
+open3d
+
+git+https://github.com/facebookresearch/pytorch3d.git@stable
+
+python-dotenv
+rich
+rtree

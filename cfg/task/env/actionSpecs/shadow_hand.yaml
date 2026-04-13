@@ -1,0 +1,7 @@
+__dim__:
+  num_shadow_actuated_dofs: 20
+
+# shadow_dof_speeds:
+hand_rotation:
+  shape: num_shadow_actuated_dofs
+  attr: shadow_dof_speeds

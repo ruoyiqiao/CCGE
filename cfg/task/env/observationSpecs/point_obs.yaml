@@ -1,0 +1,7 @@
+__dim__:
+  num_xy_dofs: 21
+
+point_xy_obs:
+  shape: num_xy_dofs  
+  attr: point_xy_obs
+  tags: ["dof", "position"]

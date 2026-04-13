@@ -1,27 +1,230 @@
+
 <div align="center">
-<h1>CCGE: Contact Coverage-Guided Exploration for General-Purpose Dexterous Manipulation</h1>
+<div id="user-content-toc"> <ul align="center" style="list-style: none;"> <summary> <h1>CCGE: Contact Coverage-Guided Exploration for General-Purpose Dexterous Manipulation</h1> </summary> </ul> </div>
 
+  <p>
+    <a href="https://contact-coverage-guided-exploration.github.io/"><img alt="Website" src="https://img.shields.io/badge/Website-Visit-2F6DB3?style=for-the-badge&logo=google-chrome&logoColor=grey&labelColor=eaeaea" /></a>
+    <a href="https://www.youtube.com/watch?v=NfZVJNBX1Uc"><img alt="Video" src="https://img.shields.io/badge/Video-Watch-2F6DB3?style=for-the-badge&logo=youtube&logoColor=grey&labelColor=eaeaea" /></a>
+    <a href="https://arxiv.org/pdf/2603.10971"><img alt="Arxiv" src="https://img.shields.io/badge/Paper-ArXiv-2F6DB3?style=for-the-badge&logo=arxiv&logoColor=grey&labelColor=eaeaea" /></a>
+    <a href="https://github.com/ruoyiqiao/CCGE/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ruoyiqiao/CCGE?style=for-the-badge&logo=github&logoColor=grey&labelColor=eaeaea&color=2F6DB3" /></a>
+  </p>
 
-<a href="https://arxiv.org/pdf/2603.10971"><img src="https://img.shields.io/badge/arXiv-2603.10971-b31b1b" alt="arXiv"></a>
-<a href="https://contact-coverage-guided-exploration.github.io/"><img src="https://img.shields.io/badge/Project_Page-green" alt="Project Page"></a>
+  <p>
+    <a href="https://developer.nvidia.com/isaac-gym"><img alt="IsaacGym" src="https://img.shields.io/badge/IsaacGym-Preview4-5B8C5A?style=for-the-badge&logo=nvidia&logoColor=grey&labelColor=eaeaea" /></a>
+    <a href="https://ubuntu.com/blog/tag/22-04-lts"><img alt="Platform" src="https://img.shields.io/badge/Platform-Linux%2064--bit-5B8C5A?style=for-the-badge&logo=linux&logoColor=grey&labelColor=eaeaea" /></a>
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-5B8C5A?style=for-the-badge&logo=opensourceinitiative&logoColor=grey&labelColor=eaeaea" />
+  </p>
 
-
-[Zixuan Liu](https://panda-shawn.github.io/)<sup>1,2</sup><sup>&ast;</sup> and [Ruoyi Qiao](https://github.com/ruoyiqiao)<sup>1,2</sup><sup>&ast;</sup>, [Chenrui Tie](https://crtie.github.io/)<sup>1,2</sup>, [Xuanwei Liu](https://github.com/Evan-XLiu)<sup>1</sup>, [Yunfan Lou](https://github.com/LYFCLOUDFAN)<sup>1</sup>,<br> [Chongkai Gao](https://chongkaigao.com/)<sup>1,2</sup>, [Zhixuan Xu](https://ariszxxu.github.io/)<sup>1,2</sup>, [Lin Shao](https://linsats.github.io/)<sup>1,2</sup><sup>†</sup>
-
-
-<sup>1 </sup>National University of Singapore, <sup>2 </sup>RoboScience
-
-<sup>&ast;</sup> Equal contribution; listed randomly. <sup>†</sup> Corresponding author.
+  <p align="center">
+    <img src="assets/allegro_sing_web.gif" width="200" />
+    <img src="assets/bi_box_web.gif" width="200" />
+    <img src="assets/inhand_cube_web.gif" width="200" />
+    <img src="assets/inhand_elephant_web.gif" width="200" />
+  </p>
 
 </div>
 
 
-### Usage
-
-Under construction...
 
 
-## Citation
+## Overview
+
+This repository provides Isaac Gym environments, training (PPO), and evaluation for dexterous manipulation with LEAP, Allegro, and bimanual hand setups. See the accompanying [paper](https://arxiv.org/pdf/2603.10971) for details.
+
+## 📚 Table of Contents
+
+1. **[Overview](#overview)**
+2. **[Installation](#installation)**
+   - [IsaacGym Conda Env](#isaacgym-conda-env)
+   - [Install IsaacGym](#install-isaacgym)
+   - [Install Other Dependencies](#install-other-dependencies)
+3. **[Training and Evaluation](#training-and-evaluation)**
+   - [Training Scripts](#training-scripts)
+   - [Evaluation](#evaluation)
+   - [Observation and Action Spaces](#observation-and-action-spaces)
+   - [Reward Settings (`reward_type`)](#reward-settings-reward_type)
+4. **[Repository Structure](#repository-structure)**
+5. **[CCGE Reward Architecture](#ccge-reward-architecture)**
+6. **[Citation](#citation)**
+7. **[License](#license)**
+
+
+# Installation
+
+
+## IsaacGym Conda Env
+
+```bash
+conda create -n ccge python=3.8   # mamba also works
+conda activate ccge
+```
+
+### Install IsaacGym
+
+Download [IsaacGym](https://developer.nvidia.com/isaac-gym/download) and extract:
+
+```bash
+wget https://developer.nvidia.com/isaac-gym-preview-4
+tar -xvzf isaac-gym-preview-4
+```
+
+Install IsaacGym Python API:
+
+```bash
+pip install -e isaacgym/python
+```
+
+Test installation:
+
+```bash
+python 1080_balls_of_solitude.py  # or
+python joint_monkey.py
+```
+
+For libpython error:
+
+- Check conda path:
+    ```bash
+    conda info -e
+    ```
+- Set LD_LIBRARY_PATH:
+    ```bash
+    export LD_LIBRARY_PATH=</path/to/conda/envs/your_env/lib>:$LD_LIBRARY_PATH
+    ```
+
+### Install Other Dependencies
+
+Install [IsaacGymEnvs](https://github.com/isaac-sim/IsaacGymEnvs) and following dependencies:
+
+```bash
+pip install --no-build-isolation -r requirements.txt
+```
+
+# Training and Evaluation
+
+## Training Scripts
+
+Two types of dexterous hands are provided (LEAP and Allegro). You may choose one of them to train.
+
+| Task | Training Script |
+|------|----------------|
+| Singulation | `train_<hand_type>_singulation.sh` |
+| Table Top | `train_<hand_type>_table_top.sh` |
+| Inhand | `train_<hand_type>_inhand.sh` |
+| Retri | `train_<hand_type>_cube_in_box.sh` |
+| Bimanual | `train_bimanual.sh` |
+
+
+## Evaluation
+
+
+Set `mode=eval` and point to a trained run directory. Start from the corresponding `train_*.sh` and append the eval flags:
+
+```bash
+python src/train.py \
+    mode=eval \
+    task=<TaskName> \
+    train=<TrainCfgName> \
+    ... \
+    --model_dir=logs/PPO/<run_dir> \
+    --resume_iter=<checkpoint_iter> \
+    --eval_times=5 \
+    --vis_env_num=0
+```
+
+Notes:
+- `--model_dir` is required for evaluation and should contain `model_*.pt`.
+- `--resume_iter` is optional (defaults to the latest checkpoint).
+
+
+## Observation and Action Spaces
+
+Observation and action spaces are set via Hydra overrides in launch scripts:
+
+```bash
+obs_space="['allegro_hand_dof_position']"
+action_space="['wrist_translation','wrist_rotation','hand_rotation']"
+```
+
+Available keys are task-specific — see the corresponding file in `src/tasks/`.
+
+## Reward Settings (`reward_type`)
+
+Training scripts pass a `reward_type` string to `src/train.py`, e.g.:
+
+- `reward_type="target+bonus+success+reach+energy_reach+contact_coverage"`
+
+The **CCGE** exploration signal consists of `energy_reach` and `contact_coverage`. To ablate exploration, remove them:
+
+- `reward_type="target+bonus+success+reach"`
+
+
+# Repository Structure
+
+- `src/` — core library code
+  - `tasks/` — Isaac Gym task environments, reward logic, and curiosity modules
+  - `algorithms/` — PPO and intrinsic-reward components
+  - `utils/` — config loading, logging, helpers
+  - Entry points: `train.py`
+- `cfg/` — Hydra configs
+  - `task/` — task/environment configs
+  - `train/` — training configs
+
+# CCGE Reward Architecture
+
+CCGE (Contact Coverage-Guided Exploration) is a curiosity-driven reward that encourages the hand to explore diverse contact regions on an object's surface. It combines a novelty-weighted potential field with a contact bonus tracked per surface cluster.
+
+```mermaid
+graph TD
+    subgraph Inputs
+        KP["Hand Keypoints<br/><i>(L points from URDF)</i>"]
+        PC["Canonical Object<br/>Point Cloud + Normals<br/><i>(M points)</i>"]
+        SFB["State Feature Bank<br/><i>LearnedHashStateBank /<br/>PushBox2DStateBank</i>"]
+    end
+
+    PC -->|K-means + FPS| CL["Surface Clusters<br/><i>(K clusters)</i>"]
+    PC --> CRM
+    CL --> CRM
+    KP --> CRM
+    SFB -->|state ID| CRM
+
+    subgraph CRM ["CuriosityRewardManager"]
+        POT["Energy-based Reaching Reward Φ<br/><i>novelty-weighted kernel</i>"]
+        CB["Contact Coverage Reward<br/><i>cluster novelty</i>"]
+        RM["Running-Max Tracker<br/><i>per state × keypoint</i>"]
+    end
+
+    CRM --> REW["<b>CCGE Reward = Energy-based Reaching Reward + Contact Coverage Reward</b>"]
+```
+
+### Required Data
+
+Each task must supply these tensors per step (N = num envs, L = keypoints, M = object points):
+
+| Tensor | Shape | How to get it |
+|--------|-------|---------------|
+| `keypoint_positions_with_offset` | `(N, L, 3)` | Index rigid-body states by keypoint link indices, apply local offsets via `quat_apply` |
+| `keypoint_contact_mask` | `(N, L)` bool | `(dist_to_surface < threshold) & (contact_force > threshold)` |
+| `object_root_positions` | `(N, 3)` | From `root_states` |
+| `object_root_orientations` | `(N, 4)` | From `root_states` (xyzw quaternion) |
+| Canonical point cloud | `(M, 3)` | Loaded from dataset (object frame) |
+| Canonical normals | `(M, 3)` | Loaded from dataset |
+
+For the full step-by-step integration guide (keypoint setup, contact mask, `CuriosityRewardManager` init, reward computation, reset handling, and config), see [`src/tasks/README.md`](src/tasks/README.md#step-by-step).
+
+# Acknowledgments
+This repository builds upon or incorporates code from the following open-source projects:
+
+- [UniDexFPM](https://github.com/tianhaowuhz/UniDexFPM) for hand-arm task environments.
+- [IsaacGymEnvs](https://github.com/isaac-sim/IsaacGymEnvs) for base task environments and Isaac Gym utilities.
+- [WoCoCo](http://github.com/LeCAR-Lab/wococo) for intrinsic baseline implementation references.
+- [ARCTIC](https://github.com/zc-alexfan/arctic) and [ContactDB](https://github.com/samarth-robo/contactdb_prediction) for simulation assets.
+
+
+Please refer to the respective repositories and their licenses for more details.
+
+# Citation
+If you find our work useful, please consider citing us!
 
 ```
 @article{liu2026contactcoverageguidedexplorationgeneralpurpose,
@@ -31,3 +234,7 @@ Under construction...
       journal={arXiv preprint arXiv:2603.10971},
 }
 ```
+
+# License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

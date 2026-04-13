@@ -1,0 +1,208 @@
+__dim__:
+  num_hand_dofs: num_hand_dofs
+  num_actions: num_actions
+
+# Right hand root
+rh_root_position:
+  shape: 3
+  attr: rh_root_position
+
+rh_root_orientation:
+  shape: 6
+  attr: rh_root_orientation
+  tags: ["orientation"]
+
+rh_root_linear_velocity:
+  shape: 3
+  attr: rh_root_linear_velocity
+  tags: ["velocity"]
+
+rh_root_angular_velocity:
+  shape: 3
+  attr: rh_root_angular_velocity
+  tags: ["velocity"]
+
+# Left hand root
+lh_root_position:
+  shape: 3
+  attr: lh_root_position
+
+lh_root_orientation:
+  shape: 6
+  attr: lh_root_orientation
+  tags: ["orientation"]
+
+lh_root_linear_velocity:
+  shape: 3
+  attr: lh_root_linear_velocity
+  tags: ["velocity"]
+
+lh_root_angular_velocity:
+  shape: 3
+  attr: lh_root_angular_velocity
+  tags: ["velocity"]
+
+# Hand DOFs (no normalization tags to avoid robot-limit path)
+rh_dof_position:
+  shape: num_hand_dofs
+  attr: right_hand_dof_positions
+
+rh_dof_velocity:
+  shape: num_hand_dofs
+  attr: right_hand_dof_velocities
+  tags: ["velocity"]
+
+lh_dof_position:
+  shape: num_hand_dofs
+  attr: left_hand_dof_positions
+
+lh_dof_velocity:
+  shape: num_hand_dofs
+  attr: left_hand_dof_velocities
+  tags: ["velocity"]
+
+# Object in world
+object_position:
+  shape: 3
+  attr: object_root_positions
+
+object_orientation:
+  shape: 6
+  attr: object_root_orientations
+  tags: ["orientation"]
+
+object_linear_velocity:
+  shape: 3
+  attr: object_root_linear_velocities
+  tags: ["velocity"]
+
+object_angular_velocity:
+  shape: 3
+  attr: object_root_angular_velocities
+  tags: ["velocity"]
+
+
+top_part_position:
+  shape: 3
+  attr: top_part_position
+
+top_part_orientation:
+  shape: 6
+  attr: top_part_orientation
+  tags: ["orientation"]
+
+top_part_linear_velocity:
+  shape: 3
+  attr: top_part_linear_velocity
+  tags: ["velocity"]
+
+top_part_angular_velocity:
+  shape: 3
+  attr: top_part_angular_velocity
+  tags: ["velocity"]
+
+
+bottom_part_position:
+  shape: 3
+  attr: bottom_part_position
+
+bottom_part_orientation:
+  shape: 6
+  attr: bottom_part_orientation
+  tags: ["orientation"]
+
+bottom_part_linear_velocity:
+  shape: 3
+  attr: bottom_part_linear_velocity
+  tags: ["velocity"]
+
+bottom_part_angular_velocity:
+  shape: 3
+  attr: bottom_part_angular_velocity
+  tags: ["velocity"]
+
+
+object_dof_position:
+  shape: 1
+  attr: task_joint_position
+
+object_dof_velocity:
+  shape: 1
+  attr: task_joint_velocity
+  tags: ["velocity"]
+
+rh_fingertip_position:
+  shape: [4, 3]
+  attr: right_fingertip_positions
+
+rh_fingertip_orientation:
+  shape: [4, 6]
+  attr: right_fingertip_orientations
+  tags: ["orientation"]
+
+rh_fingertip_linear_velocity:
+  shape: [4, 3]
+  attr: right_fingertip_linear_velocities
+  tags: ["velocity"]
+
+rh_fingertip_angular_velocity:
+  shape: [4, 3]
+  attr: right_fingertip_angular_velocities
+  tags: ["velocity"]
+
+# Left hand fingertips
+lh_fingertip_position:
+  shape: [4, 3]
+  attr: left_fingertip_positions
+
+lh_fingertip_orientation:
+  shape: [4, 6]
+  attr: left_fingertip_orientations
+  tags: ["orientation"]
+
+lh_fingertip_linear_velocity:
+  shape: [4, 3]
+  attr: left_fingertip_linear_velocities
+  tags: ["velocity"]
+
+lh_fingertip_angular_velocity:
+  shape: [4, 3]
+  attr: left_fingertip_angular_velocities
+  tags: ["velocity"]
+
+# Object w.r.t. each palm (actor root as palm frame)
+object_position_wrt_rh_palm:
+  shape: 3
+  attr: object_positions_wrt_rh_palm
+
+object_orientation_wrt_rh_palm:
+  shape: 6
+  attr: object_orientations_wrt_rh_palm
+  tags: ["orientation"]
+
+object_position_wrt_lh_palm:
+  shape: 3
+  attr: object_positions_wrt_lh_palm
+
+object_orientation_wrt_lh_palm:
+  shape: 6
+  attr: object_orientations_wrt_lh_palm
+  tags: ["orientation"]
+
+# Inter-hand relative pose (left w.r.t. right)
+hand_relative_position:
+  shape: 3
+  attr: lh_wrt_rh_position
+
+hand_relative_orientation:
+  shape: 6
+  attr: lh_wrt_rh_orientation
+  tags: ["orientation"]
+
+tactile:
+  shape: 58 # 46 # 60 # 30 * 2 (LH, RH)
+  attr: contact_states
+
+action:
+  shape: num_actions
+  attr: actions

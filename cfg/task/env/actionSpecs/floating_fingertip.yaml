@@ -1,0 +1,7 @@
+__dim__:
+  num_floating_fingertip_actuated_dofs: 6
+
+floating_fingertip_dof:
+  shape: num_floating_fingertip_actuated_dofs
+  attr: floating_fingertip_dof_speeds
+

@@ -1,0 +1,44 @@
+__dim__:
+  root_control_dim: root_control_dim
+  num_hand_dofs: num_hand_dofs
+
+rh_root_translation:
+  shape: 3
+  attr: rh_root_translation_action
+
+# rh_root_rotation_6d:
+#   shape: 6
+#   attr: rh_root_rotation_action
+
+lh_eef_rotation_quaternion:
+  shape: 4
+  attr: lh_eef_rotation_action
+
+lh_root_translation:
+  shape: 3
+  attr: lh_root_translation_action
+
+lh_wrist_rotation:
+  shape: 3
+  attr: lh_eef_rotation_action
+
+# lh_root_rotation_6d:
+#   shape: 6
+#   attr: lh_root_rotation_action
+
+rh_eef_rotation_quaternion:
+  shape: 4
+  attr: rh_eef_rotation_action
+
+rh_wrist_rotation:
+  shape: 3
+  attr: rh_eef_rotation_action
+
+rh_finger_positions:
+  shape: num_hand_dofs
+  attr: rh_finger_action
+
+lh_finger_positions:
+  shape: num_hand_dofs
+  attr: lh_finger_action
+

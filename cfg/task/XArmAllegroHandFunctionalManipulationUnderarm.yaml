@@ -1,0 +1,289 @@
+# used to create the object
+name: XArmAllegroHandFunctionalManipulationUnderarm
+
+physics_engine: ${..physics_engine}
+
+defaults:
+  - env/observationSpecs: xarm_allegro
+  # - env/curiosityObservationSpecs: xarm_allegro_curiosity
+  - env/actionSpecs: xarm_allegro
+  - domain_rand: domain_rand_base
+
+# if given, will override the device setting in gym.
+env:
+  seed: ${resolve_default:0,${...seed}}
+  numEnvs: ${resolve_default:32,${...num_envs}}
+  envSpacing: 0.75
+  episodeLength: 300
+  enableDebugVis: False
+  renderTarget: False
+  aggregateMode: 1
+
+  mode: ${resolve_default:train,${...mode}}
+  method: "ppo"
+
+  clipObservations: 5.0
+  clipActions: 1.0
+
+  stiffnessScale: 1.0
+  forceLimitScale: 1.0
+
+  useRelativeControl: True
+  useAbsoluteJointControl: False
+  dofSpeedScale: 20.0
+  actionsMovingAverage: 0.8
+  # controlFrequencyInv: 2 # 30 Hz
+  controlFrequencyInv: 4 # 10 Hz
+
+  startPositionNoise: 0.01
+  startRotationNoise: 0.0
+
+  resetPositionNoise: 0.01
+  resetRotationNoise: 0.0
+  resetObjOriNoise: 0.0
+  resetDofPosRandomInterval: 0.2
+  resetDofVelRandomInterval: 0.0
+
+  randomSceneXYOnReset: true
+  randomSceneOrientationOnReset: false
+
+  actionNoise: False
+  actionNoiseLevel: "step" # "step", "value"
+  actionNoiseRatio: 0.4
+  actionNoiseSigma: 0.1
+  actionNoiseMaxTimes: 0
+
+  # Random forces applied to the object
+  forceScale: 10.0
+  torqueScale: 100.0
+  wrenchProb: 0.1
+  forceProbRange: [0.001, 0.1]
+  forceDecay: 0.99
+  forceDecayInterval: 0.08
+
+  # hand qpose
+  handType: "allegro"
+
+  # reward -> dictionary
+  # For singulation task, use: "succrew+tilt+slide+neighbor+stability+actionpen"
+  rewardType: ${resolve_default:succrew+tilt+slide+neighbor+stability+actionpen,${...reward_type}}
+  # Legacy: "succrew+rotrew+actionpen+mutual+fjcontact+nominal"
+  relativePartReward: False
+  distRewardScale: -10.0
+  rotRewardScale: 1.0
+  tranRewardScale: 1.0
+  contactRewardScale: 1.0
+  partRewardScale: 0.3
+  heightRewardScale: 0.5
+  rotEps: 0.1
+  contactEps: 0.2
+  actionPenaltyScale: -0.0
+  wristActionPenaltyScale: -0.0
+  armActionPenaltyScale: -0.01
+  similarityRewardScale: 1.0
+  similarityRewardFreq: 1.0
+  reachGoalBonus: 600
+  heightScale: 0.0
+  timeStepPenatly: -0.0
+  manipulabilityPenaltyScale: 1.0
+  fallDistance: 0.24
+  fallPenalty: 0.0
+  curriculumMode: "no" 
+
+  enableCuriosity: True
+  curiosity:
+    enable_occlusion: True
+    enablePotentialCuriosity: true
+
+
+
+  tiltRewardScale: 1.0  # Reward for tilting object along x-axis (-45 degrees goal)
+  slideRewardScale: 1.0  # Reward for sliding object forward along z-axis (20-30cm goal)
+  neighborStabilityPenaltyScale: -5.0  # Penalty for moving non-target objects
+  stabilityPenaltyScale: -2.0  # Penalty for unwanted Y/Z axis rotations (keep object stable)
+
+  goalTranslationY: 0.05
+  goalRotationX: -0.80
+  goalTolerancePosition: 0.05
+  goalToleranceRotation: 0.087
+
+  # successTolerance: 0.075
+  # targetSuccessTolerance: 0.01
+  # toleranceCurriculumIncrement: 0.9  # multiplicative
+  # toleranceCurriculumInterval: 3000  # in env steps across all agents, with 8192 this is 3000 * 8192 = 24.6M env steps
+  # maxConsecutiveSuccesses: 50
+  successSteps: 60
+  observationType: "full_state" # can be "openai", "full_no_vel", "full", "full_state"
+
+  enableContactSensors: True
+  contactSensorThreshold: 0.005
+  contactSensorFingertipOnly: False
+  contactSensorFingertipFromAll: False
+
+  # dataset filter
+  datasetDir: "oakink_shadow_dataset_valid_force_noise_accept_1"
+  datasetMetainfoPath: "data/oakink_filtered_metainfo.csv"
+  datasetSkipcodePath: "data/oakink_skipcode.csv"
+  datasetPoseLevelSampling: True
+  datasetQueries:
+    split: ${resolve_default:null,${....split}} #"train"
+    cluster: ${resolve_default:null,${....cluster}} #10
+    code: ${resolve_default:null,${....code}} #"binoculars_16"
+
+  observationSpace:
+    ${resolve_default:[],${...obs_space}}
+
+
+  observationSpaceExtra:
+    # - object_position
+    # - rendered_pointcloud
+
+  enableRenderedPointCloud: False
+  numRenderedPointCloudPoints: 1024
+  renderedPointCloudMultiplier: 8
+  renderedPointCloudSampleMethod: "farthest"
+  renderedPointCloudGaussianNoise: False
+  renderedPointCloudGaussianNoiseSigma: 0.004
+  renderedPointCloudGaussianNoiseRatio: 0.4
+
+  enableImaginedPointCloud: False
+  numImaginedPointCloudPoints: 512
+
+  numObjectPointCloudPoints: 512
+
+  enableRenderedPointCloudTargetMask: False
+
+  pclObs: False
+  realPclObs: False
+  imgPclObs: False
+  tactileObs: False
+  stackFrameNumber: ${resolve_default:1,${...stack_frame_number}}
+  velocityObservationScale: 0.2
+  actionSpace:
+    ${resolve_default:[],${...action_space}}
+    # must follow following order: xarm_translation, xarm_rotation, hand_rotation
+    # - "xarm_translation"
+    # - "xarm_rotation"
+    # - "hand_rotation"
+
+  numObjects: ${resolve_default:3,${...num_objects}}
+  numObjectsPerEnv: ${resolve_default:1,${...num_objects_per_env}}
+  objectSpacing: 0.15
+  resampleObject: ${resolve_default:False,${...resample_object}}
+
+  asymmetric_observations: False
+  successTolerance: 0.1
+  printNumSuccesses: False
+  maxConsecutiveSuccesses: 100
+
+  # set to True if you use camera sensors in the environment
+  enableCameraSensors: False
+  visEnvNum: 0
+  visImageSize: 512
+
+
+  goalPosition: [0.0, 0.5, 0.7]
+  goalPositionDistMin: 0.6
+
+logging:
+  envInfo: ${resolve_default:False,${...env_info}}
+
+task:
+  randomize: False
+  randomization_params:
+    frequency: 300   # refresh correlated noise once per episode (episodeLength=300)
+    observations:
+      range: [0.0, 0.005]
+      range_correlated: [0.0, 0.01]
+      operation: "additive"
+      distribution: "gaussian"
+    actions:
+      range: [0.0, 0.05]
+      range_correlated: [0.0, 0.02]
+      operation: "additive"
+      distribution: "gaussian"
+    sim_params:
+      gravity:
+        range: [0.0, 0.5]
+        operation: "additive"
+        distribution: "gaussian"
+    actor_params:
+      allegro_hand:
+        color: True
+        dof_properties:
+          stiffness:
+            range: [0.5, 2.0]
+            operation: "scaling"
+            distribution: "loguniform"
+          damping:
+            range: [0.3, 3.0]
+            operation: "scaling"
+            distribution: "loguniform"
+        rigid_body_properties:
+          mass:
+            range: [0.3, 3.0]
+            operation: "scaling"
+            distribution: "uniform"
+            setup_only: True
+        rigid_shape_properties:
+          friction:
+            num_buckets: 8
+            range: [0.5, 1.1]
+            operation: "scaling"
+            distribution: "uniform"
+          restitution:
+            num_buckets: 8
+            range: [0.0, 0.4]
+            operation: "additive"
+            distribution: "uniform"
+      targ_obj:
+        rigid_body_properties:
+          mass:
+            range: [0.3, 3.0]
+            operation: "scaling"
+            distribution: "uniform"
+            setup_only: True
+        rigid_shape_properties:
+          friction:
+            num_buckets: 8
+            range: [0.5, 1.1]
+            operation: "scaling"
+            distribution: "uniform"
+          restitution:
+            num_buckets: 4
+            range: [0.0, 0.4]
+            operation: "additive"
+            distribution: "uniform"
+      table:
+        rigid_shape_properties:
+          friction:
+            num_buckets: 8
+            range: [0.5, 1.1]
+            operation: "scaling"
+            distribution: "uniform"
+          restitution:
+            num_buckets: 4
+            range: [0.0, 0.4]
+            operation: "additive"
+            distribution: "uniform"
+
+sim:
+  dt: 0.01667 # 1/60
+  substeps: 2
+  up_axis: "z"
+  use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: ${....num_threads}
+    solver_type: ${....solver_type}
+    use_gpu: ${contains:"cuda",${....sim_device}} # set to False to run on CPU
+    num_position_iterations: 8
+    num_velocity_iterations: 0
+    max_gpu_contact_pairs: 8388608 # 8*1024*1024
+    num_subscenes: ${....num_subscenes}
+    contact_offset: 0.002
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 1000.0
+    default_buffer_size_multiplier: 5.0
+    contact_collection: 1 # 0: CC_NEVER (don't collect contact info), 1: CC_LAST_SUBSTEP (collect only contacts on last substep), 2: CC_ALL_SUBSTEPS (broken - do not use!)

@@ -1,0 +1,237 @@
+__dim__:
+  num_fingers: 4  # Allegro hand has 4 fingertips
+  num_degrees_of_freedom: 23  # xArm6 (6) + Allegro hand (16) = 22 DOF
+
+  num_object_points: ${...numObjectPointCloudPoints}
+  num_rendered_points: ${...numRenderedPointCloudPoints}
+  num_imagined_points: ${...numImaginedPointCloudPoints}
+  num_tactile_sensors: 23  # 4 fingertips with force sensors
+  num_fingertips: 4
+  num_keypoints: 17  # Updated for Allegro hand keypoints
+  num_nearest_non_targets: 6
+  num_actions: num_actions
+  num_categories: num_categories
+
+##################################################
+# Allegro hand
+##################################################
+
+allegro_hand_dof_position:
+  shape: 23  # Allegro hand has 16 DOF
+  attr: allegro_hand_dof_positions
+  tags: ["dof", "position"]
+
+allegro_hand_dof_velocity:
+  shape: 23  # Allegro hand has 16 DOF
+  attr: allegro_hand_dof_velocities
+  tags: ["velocity"]
+
+##################################################
+# xArm6 end effector
+##################################################
+
+xarm_endeffector_position:
+  shape: 3
+  attr: endeffector_positions
+
+xarm_endeffector_orientation:
+  shape: 6
+  attr: endeffector_orientations
+  tags: ["orientation"]
+
+xarm_endeffector_angular_velocity:
+  shape: 3
+  attr: endeffector_angular_velocities
+
+xarm_endeffector_linear_velocity:
+  shape: 3
+  attr: endeffector_linear_velocities
+
+palm_position_wrt_object:
+  shape: 3
+  attr: palm_positions_wrt_object
+
+palm_orientation_wrt_object:
+  shape: 6
+  attr: palm_orientations_wrt_object
+  tags: ["orientation"]
+
+xarm_hand_position:
+  shape: 3
+  attr: allegro_hand_center_positions
+
+xarm_hand_orientation:
+  shape: 6
+  attr: allegro_hand_center_orientations
+  tags: ["orientation"]
+
+xarm_hand_position_wrt_object:
+  shape: 3
+  attr: palm_positions_wrt_object
+
+xarm_hand_orientation_wrt_object:
+  shape: 6
+  attr: palm_orientations_wrt_object
+  tags: ["orientation"]
+
+##################################################
+# Fingers
+##################################################
+
+fingertip_position:
+  shape: [num_fingers, 3]
+  attr: fingertip_positions
+
+fingertip_orientation:
+  shape: [num_fingers, 4]
+  attr: fingertip_orientations
+  tags: ["orientation"]
+
+fingertip_distances:
+  shape: num_fingers
+  attr: fingertip_distances
+
+fingertip_position_wrt_palm:
+  shape: [num_fingers, 3]
+  attr: fingertip_positions_wrt_palm
+
+fingertip_orientation_wrt_palm:
+  shape: [num_fingers, 4]
+  attr: fingertip_orientations_wrt_palm
+
+fingertip_linear_velocity:
+  shape: [num_fingers, 3]
+  attr: fingertip_linear_velocities
+
+fingertip_angular_velocity:
+  shape: [num_fingers, 3]
+  attr: fingertip_angular_velocities
+
+fingertip_position_wrt_object:
+  shape: [num_fingers, 3]
+  attr: fingertip_positions_wrt_object
+
+fingertip_orientation_wrt_object:
+  shape: [num_fingers, 6]
+  attr: fingertip_orientations_wrt_object
+  tags: ["orientation"]
+
+fingertip_geometric_distance:
+  shape: num_fingers
+  attr: fingertip_geometric_distances
+
+fingertip_geometric_direction:
+  shape: [num_fingers, 3]
+  attr: fingertip_geometric_directions
+
+
+##################################################
+# Object
+##################################################
+
+object_position:
+  shape: 3
+  attr: object_root_positions
+
+object_orientation:
+  shape: 6
+  attr: object_root_orientations
+  tags: ["orientation"]
+
+object_linear_velocity:
+  shape: 3
+  attr: object_root_linear_velocities
+
+object_angular_velocity:
+  shape: 3
+  attr: object_root_angular_velocities
+
+object_position_wrt_palm:
+  shape: 3
+  attr: object_positions_wrt_palm
+
+object_orientation_wrt_palm:
+  shape: 6
+  attr: object_orientations_wrt_palm
+  tags: ["orientation"]
+
+object_position_wrt_keypoint:
+  shape: [num_keypoints, 3]
+  attr: object_positions_wrt_keypoints
+
+nearest_non_target_object_position:
+  shape: [num_nearest_non_targets, 3]
+  attr: nearest_non_target_object_positions
+
+nearest_non_target_object_orientation:
+  shape: [num_nearest_non_targets, 6]
+  attr: nearest_non_target_object_orientations
+  tags: ["orientation"]
+
+##################################################
+# Geometry
+##################################################
+
+object_bbox:
+  shape: 6
+  attr: object_bboxes_wrt_world
+
+##################################################
+# Target
+##################################################
+
+# object_target_orn:
+#   shape: 4
+#   attr: object_targets
+
+# object_target_relposecontact:
+#   shape: 25  # Relative pose (7) + contact (18 for Allegro hand)
+#   attr: object_targets
+
+# orientation_error:
+#   shape: 3
+#   attr: orientation_error
+
+# position_error:
+#   shape: 3
+#   attr: position_error
+
+# fingerjoint_error:
+#   shape: 16  # Allegro hand has 16 DOF
+#   attr: dof_distances
+
+##################################################
+# Pointclouds
+##################################################
+
+object_pointcloud:
+  shape: [num_object_points, 3]
+  attr: object_pointclouds
+
+rendered_pointcloud:
+  shape: [num_rendered_points, 3]
+  attr: rendered_pointclouds
+
+imagined_pointcloud:
+  shape: [num_imagined_points, 3]
+  attr: imagined_pointclouds
+
+hand_object_pc_dist:
+  shape: num_keypoints
+  attr: hand_object_pc_distances
+
+##################################################
+# Contact / Tactile
+##################################################
+
+tactile:
+  shape: num_tactile_sensors
+  attr: contact_states
+
+##################################################
+# Actions
+##################################################
+
+action:
+  shape: num_actions
+  attr: actions

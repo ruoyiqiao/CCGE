@@ -1,0 +1,238 @@
+name: LeapBimanualArti
+
+physics_engine: ${..physics_engine}
+
+defaults:
+  - env/observationSpecs: leap_bimanual
+  - env/actionSpecs: leap_bimanual
+
+env:
+  seed: ${resolve_default:0,${...seed}}
+  numEnvs: ${resolve_default:2048,${...num_envs}}
+  envSpacing: 0.8
+  episodeLength: 300
+  enableDebugVis: False
+  aggregateMode: 1
+
+  clipObservations: 5.0
+  clipActions: 1.0
+
+  actionsMovingAverage: 0.8
+  # controlFrequencyInv: 2
+  controlFrequencyInv: 4
+
+  useRelativeControl: True
+  useAbsoluteJointControl: False
+  # maxEefTranslationSpeed: 1.0
+  # maxEefRotationSpeed: 12.566 # torch.pi * 4
+  maxEefTranslationSpeed: 0.4
+  maxEefRotationSpeed: 1.57 # torch.pi * 4
+    
+  usePIDControl: False
+
+  rootControlDim: 9
+  translationScale: 1.0
+  orientationScale: 1.0
+  fingerActionScale: 20.0
+  fingerStiffness: 3.0
+  fingerDamping: 0.1
+  distanceRewardScale: 2.5
+  successSteps: 60
+  terminateOnSuccess: True
+
+  rewardType: ${resolve_default:succrew+rotrew+actionpen+mutual+fjcontact,${...reward_type}}
+
+  hands:
+    # right:
+    #   assetFile: leap_hand_right.urdf
+    #   keypoints: assets/urdf/xarm6_leap_right_keypoints.json
+    #   wristLink: palm_lower
+    #   initPose:
+    #     position: [-0.24, 0.24, 0.65]
+    #     # orientation: [0.707, 0.0, 0.0, 0.707]
+    #     orientation: [0.5, 0.5, -0.5, 0.5]
+    #   successThreshold: 0.045
+    # left:
+    #   assetFile: leap_hand_left.urdf
+    #   keypoints: assets/urdf/xarm6_leap_left_keypoints.json
+    #   wristLink: palm_lower
+    #   initPose:
+    #     position: [0.24, 0.24, 0.65]
+    #     # orientation: [0.707, 0.0, 0.0, 0.707]
+    #     orientation: [0.5, 0.5, -0.5, 0.5]
+    #   successThreshold: 0.055
+    right:
+      assetFile: xarm6_leap_horizontal_moving_right.urdf
+      keypoints: assets/urdf/xarm6_leap_right_keypoints.json
+      wristLink: palm_lower
+      initPose:
+        position: [-0.30, 0.50, 0.0]
+        # orientation: [0.707, 0.0, 0.0, 0.707]
+        orientation: [0.0, 0.0, -0.707, 0.707]
+      successThreshold: 0.045
+    left:
+      assetFile: xarm6_leap_horizontal_moving_left.urdf
+      keypoints: assets/urdf/xarm6_leap_left_keypoints.json
+      wristLink: palm_lower_left
+      initPose:
+        position: [0.30, 0.50, 0.0]
+        # orientation: [0.707, 0.0, 0.0, 0.707]
+        orientation: [0.0, 0.0, -0.707, 0.707]
+      successThreshold: 0.055
+
+  objects:
+    - name: waffleiron
+      # assetRoot: /home/yixuanpan/sda/yixuanpan/TOUCHMANIP/assets/arctic_assets/object_urdf
+      assetRoot: ./assets/arctic_assets/object_urdf
+      taskJoint: joint1
+      # assetRoot: assets/mjcf/cup
+      # task_joint: joint_0
+      assetFile: waffleiron.urdf
+      # pose: [0.0, 0.0, 0.80, 0.0, 0.0, 0.0, 1.0]
+      # pose: [0.0, 0.0, 0.80, -0.272, -0.653, 0.272, 0.653]
+      pose: [0.05, -0.08, 0.60, -0.5, -0.5, 0.5, 0.5] # waffleiron
+      color: [0.85, 0.60, 0.55]
+      track: True
+      taskType: "waffleiron"
+
+    # - name: ketchup
+    #   assetRoot: ./assets/arctic_assets/object_urdf
+    #   taskJoint: joint1
+    #   # assetRoot: assets/mjcf/cup
+    #   # task_joint: joint_0
+    #   assetFile: ketchup.urdf
+    #   # pose: [0.0, 0.0, 0.80, 0.0, 0.0, 0.0, 1.0]
+    #   # pose: [0.0, 0.0, 0.80, -0.272, -0.653, 0.272, 0.653]
+    #   pose: [0.00, 0.00, 0.75, 0.0, -0.707, 0.0, 0.707] # waffleiron
+    #   color: [0.85, 0.60, 0.55]
+    #   track: True
+    #   taskType: "ketchup"
+
+    # - name: scissors
+    #   assetRoot: ./assets/arctic_assets/object_urdf
+    #   taskJoint: joint1
+    #   # assetRoot: assets/mjcf/cup
+    #   # task_joint: joint_0
+    #   assetFile: scissors.urdf
+    #   # pose: [0.0, 0.0, 0.80, 0.0, 0.0, 0.0, 1.0]
+    #   pose: [0.00, 0.00, 0.60, 0.707, -0.707, 0.0, 0.0]
+    #   # pose: [0.00, 0.00, 0.75, 0.0, 0.0, -0.707, 0.707]
+    #   color: [0.85, 0.60, 0.55]
+    #   track: True
+    #   taskType: "scissors"
+
+
+    # - name: espressomachine
+    #   assetRoot: ./assets/arctic_assets/object_urdf
+    #   taskJoint: joint1
+    #   # assetRoot: assets/mjcf/cup
+    #   # task_joint: joint_0
+    #   assetFile: espressomachine.urdf
+    #   # pose: [0.0, 0.0, 0.80, 0.0, 0.0, 0.0, 1.0]
+    #   pose: [-0.05, 0.00, 0.60, 0.0, 0.0, 0.945, 0.301]
+    #   # pose: [0.00, 0.00, 0.75, 0.0, 0.0, -0.707, 0.707]
+    #   color: [0.85, 0.60, 0.55]
+    #   track: True
+    #   taskType: "espressomachine"
+
+    # - name: box
+    #   assetRoot: ./assets/arctic_assets/object_urdf
+    #   taskJoint: joint1
+    #   # assetRoot: assets/mjcf/cup
+    #   # task_joint: joint_0
+    #   assetFile: box.urdf
+    #   # pose: [0.0, 0.0, 0.80, 0.0, 0.0, 0.0, 1.0]
+    #   pose: [0.08, -0.15, 0.80, -0.271, -0.653, 0.271, 0.653]
+    #   # pose: [0.00, 0.00, 0.75, 0.0, 0.0, -0.707, 0.707]
+    #   color: [0.85, 0.60, 0.55]
+    #   track: True
+    #   taskType: "box"
+
+  taskConfig:
+    description: "Right hand twists the bottle lid while left hand stabilises the bottle body."
+    distanceRewardScale: 2.5
+    successSteps: 60
+    successBonus: 600.0
+    terminateOnSuccess: True
+    curiosityRewardScale: 0.5
+    targets:
+      right:
+        actor: bottle_cap
+        body: link_0
+        successThreshold: 0.045
+      left:
+        actor: bottle_cap
+        body: link_1
+        successThreshold: 0.055
+
+  observationSpace:
+    ${resolve_default:[],${...obs_space}}
+
+  observationSpaceExtra:
+
+  # observationSpace:
+  #   - rh_root_pose
+  #   - rh_root_velocity
+  #   - rh_hand_dof_pos
+  #   - rh_hand_dof_vel
+  #   - lh_root_pose
+  #   - lh_root_velocity
+  #   - lh_hand_dof_pos
+  #   - lh_hand_dof_vel
+  #   - object_root_pose
+  #   - object_root_velocity
+
+  # observationSpaceExtra: []
+
+
+  pclObs: False
+  realPclObs: False
+  imgPclObs: False
+  tactileObs: False
+  stackFrameNumber: ${resolve_default:1,${...stack_frame_number}}
+  velocityObservationScale: 0.2
+  
+  actionSpace:
+    ${resolve_default:[],${...action_space}}
+
+  # actionSpace:
+  #   - rh_root_translation
+  #   - rh_root_rotation_6d
+  #   - lh_root_translation
+  #   - lh_root_rotation_6d
+  #   - rh_finger_positions
+  #   - lh_finger_positions
+
+  enableRenderedPointCloud: False
+  enableImaginedPointCloud: False
+  enableContactSensors: False
+  enableCuriosity: False
+
+logging:
+  envInfo: True
+
+task:
+  randomize: False
+  randomization_params: {}
+
+sim:
+  dt: 0.01667
+  substeps: 2
+  up_axis: "z"
+  use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: ${....num_threads}
+    solver_type: ${....solver_type}
+    use_gpu: ${contains:"cuda",${....sim_device}}
+    num_position_iterations: 8
+    num_velocity_iterations: 0
+    max_gpu_contact_pairs: 8388608
+    num_subscenes: ${....num_subscenes}
+    contact_offset: 0.002
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 1000.0
+    default_buffer_size_multiplier: 5.0
+    contact_collection: 1
+

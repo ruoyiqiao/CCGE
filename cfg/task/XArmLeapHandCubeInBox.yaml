@@ -1,0 +1,207 @@
+# used to create the object
+name: XArmLeapHandCubeInBox
+
+physics_engine: ${..physics_engine}
+
+defaults:
+  - env/observationSpecs: xarm_leap
+  - env/actionSpecs: xarm_leap
+  - domain_rand: domain_rand_base
+
+# if given, will override the device setting in gym.
+env:
+  seed: ${resolve_default:0,${...seed}}
+  numEnvs: ${resolve_default:32,${...num_envs}}
+  envSpacing: 0.75
+  episodeLength: 300
+  enableDebugVis: False
+  renderTarget: False
+  aggregateMode: 1
+
+  mode: ${resolve_default:train,${...mode}}
+  method: "ppo"
+
+  clipObservations: 5.0
+  clipActions: 1.0
+
+  stiffnessScale: 1.0
+  forceLimitScale: 1.0
+
+  useRelativeControl: True
+  useAbsoluteJointControl: False
+  dofSpeedScale: 20.0
+  actionsMovingAverage: 0.8
+  # controlFrequencyInv: 2
+  controlFrequencyInv: 4
+
+  startPositionNoise: 0.01
+  startRotationNoise: 0.0
+
+  resetPositionNoise: 0.01
+  resetRotationNoise: 0.0
+  resetObjOriNoise: 0.0
+  resetDofPosRandomInterval: 0.2
+  resetDofVelRandomInterval: 0.0
+
+  randomSceneXYOnReset: false
+  randomSceneOrientationOnReset: false
+
+  actionNoise: False
+  actionNoiseLevel: "step"
+  actionNoiseRatio: 0.4
+  actionNoiseSigma: 0.1
+  actionNoiseMaxTimes: 0
+
+  # Random forces applied to the object
+  forceScale: 0.0
+  forceProbRange: [0.001, 0.1]
+  forceDecay: 0.99
+  forceDecayInterval: 0.08
+
+  # hand qpose
+
+  # reward -> dictionary
+  rewardType: ${resolve_default:succrew+tilt+slide+neighbor+stability+actionpen,${...reward_type}}
+  relativePartReward: False
+  distRewardScale: -10.0
+  rotRewardScale: 1.0
+  tranRewardScale: 1.0
+  contactRewardScale: 1.0
+  partRewardScale: 0.3
+  heightRewardScale: 0.5
+  rotEps: 0.1
+  contactEps: 0.2
+  actionPenaltyScale: -0.0
+  wristActionPenaltyScale: -0.0
+  armActionPenaltyScale: -0.01
+  similarityRewardScale: 1.0
+  similarityRewardFreq: 1.0
+  reachGoalBonus: 600
+  heightScale: 0.0
+  timeStepPenatly: -0.0
+  manipulabilityPenaltyScale: 1.0
+  fallDistance: 0.24
+  fallPenalty: 0.0
+  curriculumMode: "no"
+
+  enableCuriosity: True
+  curiosity:
+    enable_occlusion: True
+    enablePotentialCuriosity: true
+
+  tiltRewardScale: 1.0
+  slideRewardScale: 1.0
+  neighborStabilityPenaltyScale: -5.0
+  stabilityPenaltyScale: -2.0
+
+  goalTranslationY: 0.05
+  goalRotationX: -0.80
+  goalTolerancePosition: 0.05
+  goalToleranceRotation: 0.087
+
+  successSteps: 60
+  observationType: "full_state"
+
+  enableContactSensors: True
+  contactSensorThreshold: 0.005
+  contactSensorFingertipOnly: False
+  contactSensorFingertipFromAll: False
+
+  observationSpace:
+    ${resolve_default:[],${...obs_space}}
+
+  observationSpaceExtra:
+    # - object_position
+    # - rendered_pointcloud
+
+  enableRenderedPointCloud: False
+  numRenderedPointCloudPoints: 1024
+  renderedPointCloudMultiplier: 8
+  renderedPointCloudSampleMethod: "farthest"
+  renderedPointCloudGaussianNoise: False
+  renderedPointCloudGaussianNoiseSigma: 0.004
+  renderedPointCloudGaussianNoiseRatio: 0.4
+
+  enableImaginedPointCloud: False
+  numImaginedPointCloudPoints: 512
+
+  numObjectPointCloudPoints: 512
+
+  pclObs: False
+  realPclObs: False
+  imgPclObs: False
+  tactileObs: False
+  stackFrameNumber: ${resolve_default:1,${...stack_frame_number}}
+  velocityObservationScale: 0.2
+  actionSpace:
+    ${resolve_default:[],${...action_space}}
+
+  numObjects: ${resolve_default:1,${...num_objects}}
+  numObjectsPerEnv: ${resolve_default:1,${...num_objects_per_env}}
+  objectSpacing: 0.15
+  resampleObject: ${resolve_default:False,${...resample_object}}
+
+  asymmetric_observations: False
+  successTolerance: 0.1
+  printNumSuccesses: False
+  maxConsecutiveSuccesses: 100
+
+  # set to True if you use camera sensors in the environment
+  enableCameraSensors: False
+  visEnvNum: 0
+  visImageSize: 512
+
+  goalPosition: [0.0, 0.3, 0.7]
+  goalPositionDistMin: 0.60
+
+  useBackWall: False
+  useSideWalls: False
+  # container + cube
+  containerInnerWidth: 0.09
+  containerInnerDepth: 0.100
+  containerHeight: 0.16
+  containerWallThickness: 0.012
+  containerFloorThickness: 0.012
+  cubeHeight: 0.16
+  cubeWidth: 0.08
+  cubeLength: 0.06
+  cubeInitJitter: 0.00
+  cubeOutClearance: 0.02
+
+logging:
+  envInfo: ${resolve_default:False,${...env_info}}
+
+task:
+  randomize: True
+  randomization_params:
+    actor_params:
+      object_0:
+        rigid_body_properties:
+          mass:
+            range: [0.01, 0.5]
+            operation: "scaling"
+            distribution: "uniform"
+            setup_only: True
+
+sim:
+  dt: 0.01667
+  substeps: 2
+  up_axis: "z"
+  use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: ${....num_threads}
+    solver_type: ${....solver_type}
+    use_gpu: ${contains:"cuda",${....sim_device}}
+    num_position_iterations: 8
+    num_velocity_iterations: 0
+    max_gpu_contact_pairs: 8388608
+    num_subscenes: ${....num_subscenes}
+    contact_offset: 0.002
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 1000.0
+    default_buffer_size_multiplier: 5.0
+    contact_collection: 1
+
+

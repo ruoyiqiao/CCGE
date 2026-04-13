@@ -1,0 +1,26 @@
+__dim__:
+  num_xarm_actuated_dofs: 6
+  num_allegro_actuated_dofs: 16
+
+# endeffector_translation:
+wrist_translation:
+  shape: 3
+  attr: eef_translation
+
+endeffector_rotation_quaternion:
+  shape: 4
+  attr: eef_rotation
+
+# endeffector_rotation_euler:
+wrist_rotation:
+  shape: 3
+  attr: eef_rotation
+
+xarm_dof_speeds:
+  shape: num_xarm_actuated_dofs
+  attr: xarm_dof_speeds
+
+# allegro_dof_speeds:
+hand_rotation:
+  shape: num_allegro_actuated_dofs
+  attr: allegro_dof_speeds

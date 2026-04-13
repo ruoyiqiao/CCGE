@@ -1,0 +1,108 @@
+__dim__:
+  num_object_points: ${...numObjectPointCloudPoints}
+  num_rendered_points: ${...numRenderedPointCloudPoints}
+  num_imagined_points: ${...numImaginedPointCloudPoints}
+  num_nearest_non_targets: 6
+  num_actions: num_actions
+  num_categories: num_categories
+
+##################################################
+# Floating Fingertip
+##################################################
+
+floating_fingertip_dof_position:
+  shape: 6  # Floating Fingertip has 6 DOF
+  attr: floating_fingertip_dof_positions
+  tags: ["dof", "position"]
+
+floating_fingertip_dof_velocity:
+  shape: 6  # Floating Fingertip has 6 DOF
+  attr: floating_fingertip_dof_velocities
+  tags: ["velocity"]
+
+
+##################################################
+# Object
+##################################################
+
+object_position:
+  shape: 3
+  attr: object_root_positions
+
+object_orientation:
+  shape: 6
+  attr: object_root_orientations
+  tags: ["orientation"]
+
+object_linear_velocity:
+  shape: 3
+  attr: object_root_linear_velocities
+
+object_angular_velocity:
+  shape: 3
+  attr: object_root_angular_velocities
+
+nearest_non_target_object_position:
+  shape: [num_nearest_non_targets, 3]
+  attr: nearest_non_target_object_positions
+
+nearest_non_target_object_orientation:
+  shape: [num_nearest_non_targets, 6]
+  attr: nearest_non_target_object_orientations
+  tags: ["orientation"]
+
+##################################################
+# Geometry
+##################################################
+
+object_bbox:
+  shape: 6
+  attr: object_bboxes_wrt_world
+
+##################################################
+# Target
+##################################################
+
+# object_target_orn:
+#   shape: 4
+#   attr: object_targets
+
+# object_target_relposecontact:
+#   shape: 25  # Relative pose (7) + contact (18 for Allegro hand)
+#   attr: object_targets
+
+# orientation_error:
+#   shape: 3
+#   attr: orientation_error
+
+# position_error:
+#   shape: 3
+#   attr: position_error
+
+# fingerjoint_error:
+#   shape: 16  # Allegro hand has 16 DOF
+#   attr: dof_distances
+
+##################################################
+# Pointclouds
+##################################################
+
+object_pointcloud:
+  shape: [num_object_points, 3]
+  attr: object_pointclouds
+
+rendered_pointcloud:
+  shape: [num_rendered_points, 3]
+  attr: rendered_pointclouds
+
+imagined_pointcloud:
+  shape: [num_imagined_points, 3]
+  attr: imagined_pointclouds
+
+##################################################
+# Actions
+##################################################
+
+action:
+  shape: num_actions
+  attr: actions

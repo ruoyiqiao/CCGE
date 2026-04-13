@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="floating_fingertip">
+
+  <!-- Base link -->
+  <link name="base_link"/>
+
+  <!-- Prismatic X -->
+  <joint name="prismatic_x" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link_px"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.0" upper="1.0" effort="10" velocity="1.0"/>
+  </joint>
+  <link name="link_px"/>
+
+  <!-- Prismatic Y -->
+  <joint name="prismatic_y" type="prismatic">
+    <parent link="link_px"/>
+    <child link="link_py"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.0" upper="1.0" effort="10" velocity="1.0"/>
+  </joint>
+  <link name="link_py"/>
+
+  <!-- Prismatic Z -->
+  <joint name="prismatic_z" type="prismatic">
+    <parent link="link_py"/>
+    <child link="link_pz"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.0" upper="1.0" effort="10" velocity="1.0"/>
+  </joint>
+  <link name="link_pz"/>
+
+  <!-- Revolute Roll -->
+  <joint name="revolute_x" type="revolute">
+    <parent link="link_pz"/>
+    <child link="link_rx"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.14" upper="3.14" effort="5" velocity="2.0"/>
+  </joint>
+  <link name="link_rx"/>
+
+  <!-- Revolute Pitch -->
+  <joint name="revolute_y" type="revolute">
+    <parent link="link_rx"/>
+    <child link="link_ry"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="3.14" effort="5" velocity="2.0"/>
+  </joint>
+  <link name="link_ry"/>
+
+  <!-- Revolute Yaw -->
+  <joint name="revolute_z" type="revolute">
+    <parent link="link_ry"/>
+    <child link="link_rz"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.14" upper="3.14" effort="5" velocity="2.0"/>
+  </joint>
+  <link name="link_rz"/>
+
+  <joint name="joint_tip" type="fixed">
+    <parent link="link_rz"/>
+    <child link="fingertip"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Fingertip (Sphere) -->
+  <link name="fingertip">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.01"/>
+      </geometry>
+      <material name="transparent_blue">
+        <color rgba="0 0 1 0.3"/>  <!-- 蓝色 + 透明度为0.3 -->
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.01"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+  </link>
+
+</robot>

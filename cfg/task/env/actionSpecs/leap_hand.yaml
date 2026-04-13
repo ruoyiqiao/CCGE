@@ -1,0 +1,7 @@
+__dim__:
+  num_allegro_actuated_dofs: 16
+
+# allegro_dof_speeds:
+hand_rotation:
+  shape: num_allegro_actuated_dofs
+  attr: allegro_dof_speeds

@@ -1,0 +1,134 @@
+name: LeapBimanualBoardLift
+
+physics_engine: ${..physics_engine}
+
+defaults:
+  - env/observationSpecs: leap_bimanual
+  - env/actionSpecs: leap_bimanual
+
+env:
+  seed: ${resolve_default:0,${...seed}}
+  numEnvs: ${resolve_default:64,${...num_envs}}
+  envSpacing: 0.9
+  episodeLength: 360
+  enableDebugVis: False
+  aggregateMode: 1
+
+  clipObservations: 5.0
+  clipActions: 1.0
+  actionsMovingAverage: 0.8
+  controlFrequencyInv: 2
+
+  useRelativeControl: True
+  usePIDControl: False
+  rootControlDim: 9
+  maxEefTranslationSpeed: 0.5
+  maxEefRotationSpeed: 6.28 # torch.pi * 4
+
+  translationScale: 1.0
+  orientationScale: 1.0
+  fingerActionScale: 20.0
+  fingerStiffness: 3.0
+  fingerDamping: 0.1
+  velocityObservationScale: 0.2
+
+  # Lowest-point lifting objective
+  lowestPointRewardScale: 120.0
+  boardLiftTargetHeight: 0.72
+  boardLiftSuccessHeight: 0.69
+  successSteps: 50
+  successBonus: 20.0
+  terminateOnSuccess: True
+  rewardType: ${resolve_default:targ,${...reward_type}}
+
+  # Explicit, adjustable arm base poses
+  # handBasePoseOverrides:
+  #   right:
+  #       position: [-0.30, 0.50, 0.20]
+  #       # orientation: [0.707, 0.0, 0.0, 0.707]
+  #       orientation: [0.0, 0.0, -0.707, 0.707]
+  #   left:
+  #       position: [0.30, 0.50, 0.20]
+  #       # orientation: [0.707, 0.0, 0.0, 0.707]
+  #       orientation: [0.0, 0.0, -0.707, 0.707]
+
+  hands:
+    right:
+      assetFile: xarm6_leap_vertical_moving_right.urdf
+      keypoints: assets/urdf/xarm6_leap_right_keypoints.json
+      wristLink: palm_lower
+      initPose:
+        position: [-0.20, 0.50, 0.00]
+        # orientation: [0.707, 0.0, 0.0, 0.707]
+        orientation: [0.0, 0.0, -0.707, 0.707]
+      successThreshold: 0.045
+    left:
+      assetFile: xarm6_leap_vertical_moving_left.urdf
+      keypoints: assets/urdf/xarm6_leap_left_keypoints.json
+      wristLink: palm_lower_left
+      initPose:
+        position: [0.20, 0.50, 0.00]
+        # orientation: [0.707, 0.0, 0.0, 0.707]
+        orientation: [0.0, 0.0, -0.707, 0.707]
+      successThreshold: 0.05
+
+  # Table must be strictly larger than board in x/y.
+  table:
+    size: [1.00, 0.60, 0.15]
+    height: 0.20
+
+  objects:
+    - name: board
+      createBox: true
+      boxSize: [0.50, 0.30, 0.06]
+      density: 20.0
+      friction: 1.0
+      pose: [0.00, 0.10, 0.2301, 0.0, 0.0, 0.0, 1.0]
+      color: [0.55, 0.70, 0.90]
+      track: True
+
+  observationSpace:
+    ${resolve_default:[],${...obs_space}}
+  observationSpaceExtra:
+
+  actionSpace:
+    ${resolve_default:[],${...action_space}}
+
+  pclObs: False
+  realPclObs: False
+  imgPclObs: False
+  tactileObs: False
+  stackFrameNumber: ${resolve_default:1,${...stack_frame_number}}
+
+  enableRenderedPointCloud: False
+  enableImaginedPointCloud: False
+  enableContactSensors: False
+  enableCuriosity: False
+
+logging:
+  envInfo: True
+
+task:
+  randomize: False
+  randomization_params: {}
+
+sim:
+  dt: 0.01667
+  substeps: 2
+  up_axis: "z"
+  use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: ${....num_threads}
+    solver_type: ${....solver_type}
+    use_gpu: ${contains:"cuda",${....sim_device}}
+    num_position_iterations: 8
+    num_velocity_iterations: 0
+    max_gpu_contact_pairs: 1048576
+    num_subscenes: ${....num_subscenes}
+    contact_offset: 0.002
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 1000.0
+    default_buffer_size_multiplier: 5.0
+    contact_collection: 1
