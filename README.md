@@ -1,12 +1,13 @@
 
 <div align="center">
-<div id="user-content-toc"> <ul align="center" style="list-style: none;"> <summary> <h1>CCGE: Contact Coverage-Guided Exploration for General-Purpose Dexterous Manipulation</h1> </summary> </ul> </div>
+
+<h1>Contact Explorer</h1>
 
   <p>
     <a href="https://contact-coverage-guided-exploration.github.io/"><img alt="Website" src="https://img.shields.io/badge/Website-Visit-2F6DB3?style=for-the-badge&logo=google-chrome&logoColor=grey&labelColor=eaeaea" /></a>
     <a href="https://www.youtube.com/watch?v=NfZVJNBX1Uc"><img alt="Video" src="https://img.shields.io/badge/Video-Watch-2F6DB3?style=for-the-badge&logo=youtube&logoColor=grey&labelColor=eaeaea" /></a>
     <a href="https://arxiv.org/pdf/2603.10971"><img alt="Arxiv" src="https://img.shields.io/badge/Paper-ArXiv-2F6DB3?style=for-the-badge&logo=arxiv&logoColor=grey&labelColor=eaeaea" /></a>
-    <a href="https://github.com/ruoyiqiao/CCGE/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ruoyiqiao/CCGE?style=for-the-badge&logo=github&logoColor=grey&labelColor=eaeaea&color=2F6DB3" /></a>
+    <a href="https://github.com/ruoyiqiao/ContactExplorer/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ruoyiqiao/ContactExplorer?style=for-the-badge&logo=github&logoColor=grey&labelColor=eaeaea&color=2F6DB3" /></a>
   </p>
 
   <p>
@@ -26,10 +27,13 @@
 
 
 
+## Highlights
 
-## Overview
+**Contact Explorer** is a exploration method for dexterous manipulation. It defines contact as the intersection between object surface points and hand keypoints, and maintains a hash-conditioned counter of *which fingers touch which object regions*.
 
-This repository provides Isaac Gym environments, training (PPO), and evaluation for dexterous manipulation with LEAP, Allegro, and bimanual hand setups. See the accompanying [paper](https://arxiv.org/pdf/2603.10971) for details.
+- **Coverage reward** (count-based) rewards novel contact patterns.
+- **Reaching reward** (energy-based) steers the hand toward under-explored regions.
+- **Results:** faster training and higher success on singulation, retrieval, in-hand reorientation, and bimanual tasks — with sim-to-real transfer. See the [paper](https://arxiv.org/pdf/2603.10971).
 
 ## 📚 Table of Contents
 
@@ -172,8 +176,6 @@ The **CCGE** exploration signal consists of `energy_reach` and `contact_coverage
 
 # CCGE Reward Architecture
 
-CCGE (Contact Coverage-Guided Exploration) is a curiosity-driven reward that encourages the hand to explore diverse contact regions on an object's surface. It combines a novelty-weighted potential field with a contact bonus tracked per surface cluster.
-
 ```mermaid
 graph TD
     subgraph Inputs
@@ -220,7 +222,6 @@ This repository builds upon or incorporates code from the following open-source 
 - [WoCoCo](http://github.com/LeCAR-Lab/wococo) for intrinsic baseline implementation references.
 - [ARCTIC](https://github.com/zc-alexfan/arctic) and [ContactDB](https://github.com/samarth-robo/contactdb_prediction) for simulation assets.
 
-
 Please refer to the respective repositories and their licenses for more details.
 
 # Citation
@@ -235,6 +236,6 @@ If you find our work useful, please consider citing us!
 }
 ```
 
-# License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
