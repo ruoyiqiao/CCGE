@@ -1,5 +1,5 @@
 import math
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, OrderedDict
 
 import torch
 from isaacgym import gymapi, gymtorch
@@ -325,7 +325,6 @@ class LeapBimanualBoardLift(LeapBimanualManipulationArti):
                 num_keypoints=4,
                 device=self.device,
                 canonical_pointcloud=canonical_pc,
-                k=32,
                 cluster_k=32,
                 max_clustering_iters=10,
                 canonical_normals=canonical_normals,
@@ -358,6 +357,49 @@ class LeapBimanualBoardLift(LeapBimanualManipulationArti):
         board_world = quat_apply(board_q_exp, board_local) + board_p.unsqueeze(1)
         self._object_parts_world_pointclouds["board"] = board_world
         self.board_lowest_point_world = board_world[..., 2].amin(dim=1)
+
+    def compute_observations(self, reset_env_ids: Optional[torch.LongTensor] = None) -> None:
+        """Compute the observations.
+
+        The observations required for the task training are stored in `self.obs_buf`.
+
+        Args:
+            reset_env_ids (Optional[torch.LongTensor], optional): The indices of the environments to reset. Defaults to None.
+                corresponding envs will be reset to the initial state if self.stack_frame_number > 1.
+        """
+        observation_dict: OrderedDict = self.retrieve_observation_dict()
+
+        # only fetch the observations required for the task training
+        observations: torch.Tensor = torch.cat(
+            [observation_dict[spec.name].reshape(self.num_envs, -1) for spec in self._observation_space], dim=-1
+        )
+
+        if self.stack_frame_number > 1:
+            if len(self.frames) == 0:
+                self.frames.extend([observations.clone() for _ in range(self.stack_frame_number)])
+            else:
+                self.frames.append(observations.clone())
+                if reset_env_ids is not None:
+                    for frame in self.frames:
+                        frame[reset_env_ids] = observations[reset_env_ids]
+
+            self.obs_buf[:] = torch.cat(list(self.frames), 1)
+        else:
+            self.obs_buf[:] = observations
+
+        if self.cfg["env"].get("returnCuriosityInfo", False):
+            if self.curiosity_state_type == "policy_state":
+                self.extras['curiosity_states'] = self.obs_buf[:].clone()
+            elif self.curiosity_state_type == "contact_force":
+                self.extras['curiosity_states'] = torch.cat([self.left_keypoint_contact_forces, self.right_keypoint_contact_forces], dim=-1).clone()
+            elif self.curiosity_state_type == "contact_distance":
+                left_relative_position = self.left_keypoint_positions_with_offset - self.object_root_positions.unsqueeze(1)
+                right_relative_position = self.right_keypoint_positions_with_offset - self.object_root_positions.unsqueeze(1)
+
+                rel_pos = torch.cat([left_relative_position, right_relative_position], dim=1).clone() # concat keypoint dim
+                self.extras['curiosity_states'] = rel_pos.clone()
+            else:
+                raise ValueError(f"Unknown curiosity state type: {self.curiosity_state_type}")
 
     def _refresh_sim_tensors(self):
         self.gym.refresh_actor_root_state_tensor(self.sim)
@@ -586,7 +628,6 @@ class LeapBimanualBoardLift(LeapBimanualManipulationArti):
                 contact_indices=contact_indices,                  # (N,4)
                 contact_mask=contact_mask,                        # (N,4)
                 task_contact_satisfied=task_contact_satisfied,
-                contact_coverage=1.0,
                 contact_forces_local=dir_world,
                 keypoint_palm_dirs_world=dir_world,
                 state_features_world=state_features_world,

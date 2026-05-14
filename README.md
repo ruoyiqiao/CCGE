@@ -4,7 +4,7 @@
 <h1>ContactExplorer</h1>
 
   <p>
-    <a href="https://contact-coverage-guided-exploration.github.io/"><img alt="Website" src="https://img.shields.io/badge/Website-Visit-2F6DB3?style=for-the-badge&logo=google-chrome&logoColor=grey&labelColor=eaeaea" /></a>
+    <a href="https://contact-explorer.github.io/"><img alt="Website" src="https://img.shields.io/badge/Website-Visit-2F6DB3?style=for-the-badge&logo=google-chrome&logoColor=grey&labelColor=eaeaea" /></a>
     <a href="https://www.youtube.com/watch?v=NfZVJNBX1Uc"><img alt="Video" src="https://img.shields.io/badge/Video-Watch-2F6DB3?style=for-the-badge&logo=youtube&logoColor=grey&labelColor=eaeaea" /></a>
     <a href="https://arxiv.org/pdf/2603.10971"><img alt="Arxiv" src="https://img.shields.io/badge/Paper-ArXiv-2F6DB3?style=for-the-badge&logo=arxiv&logoColor=grey&labelColor=eaeaea" /></a>
     <a href="https://github.com/ruoyiqiao/ContactExplorer/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ruoyiqiao/ContactExplorer?style=for-the-badge&logo=github&logoColor=grey&labelColor=eaeaea&color=2F6DB3" /></a>
@@ -31,8 +31,8 @@
 
 **ContactExplorer** is a exploration method for dexterous manipulation. It defines contact as the intersection between object surface points and hand keypoints, and maintains a hash-conditioned counter of *which fingers touch which object regions*.
 
-- **Coverage reward** (count-based) rewards novel contact patterns.
-- **Reaching reward** (energy-based) steers the hand toward under-explored regions.
+- **Coverage Coverage Reward** rewards novel contact patterns.
+- **Energy-based Reaching Reward** steers the hand toward under-explored regions.
 - **Results:** faster training and higher success on singulation, retrieval, in-hand reorientation, and bimanual tasks — with sim-to-real transfer. See the [paper](https://arxiv.org/pdf/2603.10971).
 
 ## 📚 Table of Contents
